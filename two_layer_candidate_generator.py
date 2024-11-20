@@ -89,11 +89,8 @@ class TwoLayerLookupCandidateGenerator(CandidateGenerator):
 
         self.pred_tokens_count = generation.sequences.shape[-1] - input_ids.shape[-1]
         self.past_key_values = generation.past_key_values
-        self.past_top_scores = (
-            torch.stack(generation.scores, dim=1).max(dim=1).values[0]
-        )
 
-        return generation.sequences, torch.stack(generation.scores, dim=1)
+        return generation.sequences, None
 
     def update_candidate_strategy(
         self, input_ids: torch.LongTensor, scores: torch.FloatTensor, num_matches: int
