@@ -29,6 +29,8 @@ from utils import _get_default_candidate_generator_generator
 
 from config import *
 
+import os
+
 draft_model = AutoModelForCausalLM.from_pretrained(
     draft_model_name,
     trust_remote_code=True,
@@ -63,6 +65,9 @@ def sub(x, y):
 ds = load_dataset(dataset_name, split=dataset_split)
 
 def save_file(stats):
+    if not(os.path.exists(output_file)):
+        directory = os.path.dirname(output_file)
+        os.makedirs(directory, exist_ok=True)
     stats_file = open(output_file, "w+")
     stats_file.write(json.dumps(stats))
     stats_file.close()
