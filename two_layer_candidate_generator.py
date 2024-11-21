@@ -23,22 +23,16 @@ class TwoLayerLookupCandidateGenerator(CandidateGenerator):
     def __init__(
         self,
         tokenizer,
-        prompt_tokens,
         draft_model,
-        input_ids,
-        code_ids,
+        num_pld_tokens=20,
         num_runs=4,
-        **diff_prompt_args,
     ):
         self.tokenizer = tokenizer
-        self.prompt_tokens = prompt_tokens
         self.draft_model = draft_model
-        self.input_ids = input_ids
-        self.code_ids = code_ids
         self.draft_model.generation_config.pad_token_id = tokenizer.pad_token_id
         self.past_key_values = None
         self.num_runs = num_runs
-        self.start_token_index = self.input_ids.shape[-1]
+        self.num_pld_tokens = num_pld_tokens
 
     def get_candidates(
         self, input_ids: torch.LongTensor
@@ -60,7 +54,7 @@ class TwoLayerLookupCandidateGenerator(CandidateGenerator):
                 attention_mask=torch.ones(
                     input_ids.shape[-1], device=input_ids.device
                 ).unsqueeze(0),
-                prompt_lookup_num_tokens=self.prompt_tokens,
+                prompt_lookup_num_tokens=self.num_pld_tokens,
                 max_new_tokens=1000,
                 stopping_criteria=stopping_criteria,
                 past_key_values=self.past_key_values,
@@ -75,7 +69,7 @@ class TwoLayerLookupCandidateGenerator(CandidateGenerator):
                 attention_mask=torch.ones(
                     input_ids.shape[-1], device=input_ids.device
                 ).unsqueeze(0),
-                prompt_lookup_num_tokens=self.prompt_tokens,
+                prompt_lookup_num_tokens=self.num_pld_tokens,
                 max_matching_ngram_size=max_matching_ngram_size,
                 max_new_tokens=1000,
                 stopping_criteria=stopping_criteria,

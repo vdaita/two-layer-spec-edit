@@ -168,12 +168,8 @@ for row_idx, row in tqdm(enumerate(ds)):
             if USE_TWO_LAYER_LOOKUP_DECODING:
                 two_layer_candidate_generator = TwoLayerLookupCandidateGenerator(
                     tokenizer,
-                    inputs.shape[-1],
                     draft_model,
-                    inputs,
-                    code_tokens.input_ids.tolist()[0],
-                    ngram_size=5,
-                    num_pred_tokens=lt,
+                    num_pld_tokens=lt,
                     num_runs=mdt,
                 )
                 model._get_candidate_generator = (
