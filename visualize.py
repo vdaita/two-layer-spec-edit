@@ -3,10 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 
+
 def visualize(data_path: str, output_path: str = "output.png", title: str = None):
     print(f"Visualizing {data_path} to {output_path}")
     if not(title):
         title = f"Results visualizations for {data_path}"
+
+    colors = ["b", "g", "r", "c", "m", "y", "k"]
+    color_index = 0
 
     results = json.loads(open(data_path).read())
     means = {}
@@ -19,7 +23,7 @@ def visualize(data_path: str, output_path: str = "output.png", title: str = None
             if eval_type not in means:
                 means[eval_type] = []
             means[eval_type].append(baseline / test_case[eval_type])
-            
+
     for eval_type in means:
         std[eval_type] = np.std(means[eval_type])
         means[eval_type] = np.mean(means[eval_type])
@@ -42,10 +46,16 @@ def visualize(data_path: str, output_path: str = "output.png", title: str = None
             )
 
     plt.figure(figsize=(10, 6))
-    # for eval_type in means:
-    #     if not(eval_type.startswith("pld")) and not(eval_type.startswith("method")):
-    #         # just draw a straight line
-    #         plt.axhline(y=means[eval_type], label=eval_type, linestyle="--")
+    for eval_type in means:
+        if not(eval_type.startswith("pld")) and not(eval_type.startswith("method")):
+            # just draw a straight line
+            plt.axhline(
+                y=means[eval_type],
+                label=eval_type,
+                linestyle="--",
+                color=colors[color_index % len(colors)],
+            )
+            color_index += 1
 
     for lookup_amount in line_groups:
         x = sorted(line_groups[lookup_amount].keys())
