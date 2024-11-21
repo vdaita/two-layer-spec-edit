@@ -60,7 +60,7 @@ def visualize(data_path: str, output_path: str = "output.png", title: str = None
     plt.xlabel("Draft Tokens")
     plt.ylabel("Mean Ratio")
     plt.legend()
-    plt.show()
+    plt.savefig(output_path)
 
 if __name__ == "__main__":
     Fire(visualize)
