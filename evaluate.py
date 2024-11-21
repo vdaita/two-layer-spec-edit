@@ -4,24 +4,13 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # coding: utf-8
-
-import json
-import random
 import time
-from typing import Optional, Tuple
 
 import numpy as np
 import torch
 import torch.nn.functional as F
-import transformers
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from transformers.generation.candidate_generator import (
-    CandidateGenerator,
-    _crop_past_key_values,
-)
-from transformers.generation.configuration_utils import GenerationConfig
-from transformers.generation.stopping_criteria import StoppingCriteria
 
 from datasets import load_dataset
 from two_layer_candidate_generator import TwoLayerLookupCandidateGenerator
