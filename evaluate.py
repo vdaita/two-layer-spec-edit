@@ -104,7 +104,8 @@ def run_evaluation(config_file: str):
                 output_scores=True,
                 assistant_model=draft_model,
                 use_cache=True,
-                temperature=config.temperature
+                temperature=config.temperature,
+                do_sample=False
             )
             end_time = time.perf_counter()
             output["assisted_decoding"] = end_time - start_time
@@ -122,7 +123,7 @@ def run_evaluation(config_file: str):
                 output_scores=True,
                 use_cache=True,
                 temperature=config.temperature,
-                
+                do_sample=False
             )
             end_time = time.perf_counter()
             output["regular_decoding"] = end_time - start_time
@@ -146,7 +147,8 @@ def run_evaluation(config_file: str):
                     temperature=config.temperature,
                     attention_mask=torch.ones(
                         inputs.shape[-1], device=inputs.device
-                    ).unsqueeze(0)
+                    ).unsqueeze(0),
+                    do_sample=False
                 )
                 end_time = time.perf_counter()
 
@@ -180,6 +182,7 @@ def run_evaluation(config_file: str):
                         use_cache=True,
                         temperature=config.temperature,
                         return_dict_in_generate=True,
+                        do_sample=False
                     )
                     end_time = time.perf_counter()
                     output[f"method_{lt}_{mdt}"] = end_time - start_time

@@ -64,6 +64,7 @@ class TwoLayerLookupCandidateGenerator(CandidateGenerator):
                 output_scores=True,
                 return_dict_in_generate=True,
                 temperature=self.config.temperature,
+                do_sample=False
             )
         else:
             generation = self.draft_model.generate(
@@ -79,6 +80,7 @@ class TwoLayerLookupCandidateGenerator(CandidateGenerator):
                 output_scores=True,
                 return_dict_in_generate=True,
                 temperature=self.config.temperature,
+                do_sample=False
             )
 
         input_ids = input_ids.to(old_device)

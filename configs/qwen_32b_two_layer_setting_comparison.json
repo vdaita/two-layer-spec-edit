@@ -5,20 +5,23 @@
     "model_name": "Qwen/Qwen2.5-Coder-32B-Instruct",
     "dataset_name": "vdaita/edit_time_5k",
     "dataset_split": "train",
-    "output_file": "evaluation/results/qwen_test_5k.json",
+    "output_file": "evaluation/results/qwen_test_two_layer_5k.json",
     "model_draft_tokens": [
         1,
-        2,
         4,
         8,
         12
     ],
     "lookup_tokens": [
-        120
+        20,
+        50,
+        80,
+        110,
+        140
     ],
     "max_matching_ngram_size": 10,
     "USE_ASSISTED_DECODING": false,
     "USE_REGULAR_DECODING": false,
-    "USE_PROMPT_LOOKUP_DECODING": true,
+    "USE_PROMPT_LOOKUP_DECODING": false,
     "USE_TWO_LAYER_LOOKUP_DECODING": true
 }
