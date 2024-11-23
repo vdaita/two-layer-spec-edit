@@ -20,6 +20,8 @@ from config import load_config_from_json
 import fire
 
 import os
+
+# Example shot for the model
 shot = """## Code Before:
 def add(a, b):
     return a + b
@@ -35,8 +37,10 @@ def sub(x, y):
     return x - y"""
 
 def run_evaluation(config_file: str):
+    # Load configuration from JSON file
     config = load_config_from_json(config_file)
 
+    # Load the draft model
     draft_model = AutoModelForCausalLM.from_pretrained(
         config.draft_model_name,
         trust_remote_code=True,
@@ -45,6 +49,7 @@ def run_evaluation(config_file: str):
         device_map="auto",
     )
 
+    # Load the tokenizer and main model
     tokenizer = AutoTokenizer.from_pretrained(config.model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
         config.model_name,
@@ -54,14 +59,17 @@ def run_evaluation(config_file: str):
         device_map="auto",
     )
 
+    # Load the dataset
     ds = load_dataset(config.dataset_name, split=config.dataset_split)
 
     stats = []
     regular_get_candidate_generator = model._get_candidate_generator
     tokenizer.eos_token_id = tokenizer.eos_token_id if tokenizer.eos_token_id else tokenizer.pad_token_id
 
+    # Iterate over the dataset
     for row_idx, row in tqdm(enumerate(ds)):
         output = {}
+        # Prepare the input text for the model
         input_text = (
             shot
             + "\n## Code Before:\n{code_text}\n## Instruction: {question}\n## Code After:\n".format(
@@ -78,7 +86,7 @@ def run_evaluation(config_file: str):
             return_tensors="pt",
         ).to(model.device)
 
-
+        # Tokenize the code
         code_tokens = tokenizer(row["code"], return_tensors="pt").to(model.device)
         starting_input_tokens = inputs.shape[-1]
         max_new_tokens = code_tokens.input_ids.shape[-1] + 512
@@ -119,6 +127,7 @@ def run_evaluation(config_file: str):
             end_time = time.perf_counter()
             output["regular_decoding"] = end_time - start_time
 
+        # Iterate over lookup tokens
         for lt in config.lookup_tokens:
             # Using HuggingFace Prompt Lookup Decoding
             if config.USE_PROMPT_LOOKUP_DECODING:
@@ -146,6 +155,7 @@ def run_evaluation(config_file: str):
                     pld_output.sequences[0, starting_input_tokens:]
                 )
 
+            # Iterate over model draft tokens
             for mdt in config.model_draft_tokens:
                 # Using Two Layer Lookup Decoding
                 if config.USE_TWO_LAYER_LOOKUP_DECODING:
@@ -177,10 +187,12 @@ def run_evaluation(config_file: str):
                         two_layer_out.sequences[0, starting_input_tokens:]
                     )
 
+        # Append the output to stats and print update
         stats.append(output)
         print_update(output)
         save_file(stats, config.output_file)
 
+    # Save the final stats to the output file
     save_file(stats, config.output_file)
 
 if __name__ == "__main__":
