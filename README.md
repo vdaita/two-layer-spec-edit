@@ -10,9 +10,9 @@ Repository structure:
 `README.md`: Project documentation.
 
 # Useful commands
-To run an evaluation run: ```sh python evaluate.py path/to/config/file.json```. Sample configurations can be found in the configs folder.
+To run an evaluation run: ```python evaluate.py path/to/config/file.json```. Sample configurations can be found in the configs folder.
 
-To visualize a certain set of runs, run ```sh python visualize.py path/to/output/file.json output/file.png``` to save a visualization to a particular folder. 
+To visualize a certain set of runs, run ``` python visualize.py path/to/output/file.json output/file.png``` to save a visualization to a particular folder. 
 
 # Output file formatting
 The dataset is loaded directly from HuggingFace without shuffling. Since it's run sequentially, you can expect the order of the outputs to line up with the order of the inputs. The generated list is a list with the attributes being as follows:
