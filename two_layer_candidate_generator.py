@@ -1,11 +1,18 @@
-from transformers.generation.stopping_criteria import StoppingCriteria
+# SPDX-FileCopyrightText: (c) iSE UIUC Research Group
+#
+# SPDX-License-Identifier: Apache-2.0
+
+from typing import Optional, Tuple
+
+import torch
 from transformers.generation.candidate_generator import (
     CandidateGenerator,
     _crop_past_key_values,
 )
-import torch
-from typing import Optional, Tuple
+from transformers.generation.stopping_criteria import StoppingCriteria
+
 from config import Config
+
 
 class NumRunsStoppingCriteria(StoppingCriteria):
     def __init__(self, max_num_runs=4):
@@ -17,7 +24,7 @@ class NumRunsStoppingCriteria(StoppingCriteria):
     ) -> torch.BoolTensor:
         self.num_runs += 1
         return self.num_runs >= self.max_num_runs
-    
+
 
 class TwoLayerLookupCandidateGenerator(CandidateGenerator):
     def __init__(
@@ -64,7 +71,7 @@ class TwoLayerLookupCandidateGenerator(CandidateGenerator):
                 output_scores=True,
                 return_dict_in_generate=True,
                 temperature=self.config.temperature,
-                do_sample=False
+                do_sample=False,
             )
         else:
             generation = self.draft_model.generate(
@@ -80,7 +87,7 @@ class TwoLayerLookupCandidateGenerator(CandidateGenerator):
                 output_scores=True,
                 return_dict_in_generate=True,
                 temperature=self.config.temperature,
-                do_sample=False
+                do_sample=False,
             )
 
         input_ids = input_ids.to(old_device)

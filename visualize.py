@@ -1,12 +1,17 @@
-from fire import Fire
-import numpy as np
-import matplotlib.pyplot as plt
+# SPDX-FileCopyrightText: (c) iSE UIUC Research Group
+#
+# SPDX-License-Identifier: Apache-2.0
+
 import json
+
+import matplotlib.pyplot as plt
+import numpy as np
+from fire import Fire
 
 
 def visualize(data_path: str, output_path: str = "output.png", title: str = None):
     print(f"Visualizing {data_path} to {output_path}")
-    if not(title):
+    if not (title):
         title = f"Results visualizations for {data_path}"
 
     colors = ["b", "g", "r", "c", "m", "y", "k"]
@@ -47,7 +52,7 @@ def visualize(data_path: str, output_path: str = "output.png", title: str = None
 
     plt.figure(figsize=(10, 6))
     for eval_type in means:
-        if not(eval_type.startswith("pld")) and not(eval_type.startswith("method")):
+        if not (eval_type.startswith("pld")) and not (eval_type.startswith("method")):
             # just draw a straight line
             plt.axhline(
                 y=means[eval_type],
@@ -71,6 +76,7 @@ def visualize(data_path: str, output_path: str = "output.png", title: str = None
     plt.ylabel("Mean Ratio")
     plt.legend()
     plt.savefig(output_path)
+
 
 if __name__ == "__main__":
     Fire(visualize)
